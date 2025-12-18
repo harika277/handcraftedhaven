@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cart | Handicraft Store</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f6f2;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #2a9d8f;
+}
+
+table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background: white;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background-color: #f4a261;
+    color: white;
+}
+
+button {
+    padding: 6px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.qty-btn {
+    background-color: #2a9d8f;
+    color: white;
+}
+
+.remove-btn {
+    background-color: #e63946;
+    color: white;
+}
+
+.clear-btn {
+    background-color: #555;
+    color: white;
+}
+
+.total {
+    width: 90%;
+    margin: 20px auto;
+    text-align: right;
+    font-size: 1.2rem;
+}
+
+/* Payment and Checkout */
+.payment-section {
+    width: 90%;
+    margin: 20px auto;
+    background:#f4a261;
+    color:black;
+    border:2px solid black;
+    padding:15px;
+    border-radius:5px;
+    font-size:16px;
+}
+
+.checkout-action {
+    width:90%;
+    margin:auto;
+    margin-bottom:30px;
+}
+
+#review-section {
+    width:90%;
+    margin:auto;
+    margin-top:20px;
+    display:none;
+}
+
+#review-section textarea {
+    width:100%;
+    padding:10px;
+    font-size:14px;
+    border-radius:5px;
+    border:1px solid #ccc;
+}
+#review-section button {
+    margin-top:10px;
+    width:100%;
+    padding:12px;
+    font-size:16px;
+    background:#2a9d8f;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+     <nav class="navbar">
+         <div class="logo">Handcrafted Haven</div>
+         <ul>
+             <li ><a href="index.html" class="active" >Home</a></li>
+             <li><a href="about.html">About</a></li>
+             <li><a href="product.html">Products</a></li>
+             <li><a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a></li>
+         </ul>
+     </nav>
+
+<h1>Your Cart</h1>
+
+<table>
+<thead>
+<tr>
+    <th>Item</th>
+    <th>Price (₹)</th>
+    <th>Quantity</th>
+    <th>Remove</th>
+</tr>
+</thead>
+
+<tbody id="cartItems"></tbody>
+</table>
+
+<div class="total">
+    Total Amount: ₹<span id="total">0</span>
+</div>
+
+<div class="actions">
+    <button class="clear-btn" onclick="clearCart()">Clear Cart</button>
+</div>
+
+<!-- Payment Method Section -->
+<div class="payment-section">
+    <strong>Payment Method:</strong> Cash on Delivery (COD)
+</div>
+
+<!-- Checkout Button -->
+<div class="checkout-action">
+    <button class="qty-btn" onclick="checkout()">Proceed to Checkout</button>
+</div>
+
+<!-- Review Section -->
+<div id="review-section">
+    <h2>Order placed.Thank you for shoppin with us!!</h2>
+    <h3>Leave a Review</h3>
+    <textarea id="review-box" rows="5" placeholder="Write your review here..."></textarea>
+    <button onclick="saveReview()">Submit Review</button>
+</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function displayCart() {
+    let table = document.getElementById("cartItems");
+    let total = 0;
+    table.innerHTML = "";
+
+    if (cart.length === 0) {
+        table.innerHTML = "<tr><td colspan='4'>Cart is empty</td></tr>";
+        document.getElementById("total").innerText = 0;
+        return;
+    }
+
+    cart.forEach((item, index) => {
+        total += item.price * item.qty;
+
+        table.innerHTML += `
+        <tr>
+            <td>${item.item}</td>
+            <td>${item.price}</td>
+            <td>
+                <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+                ${item.qty}
+                <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+            </td>
+            <td>
+                <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+            </td>
+        </tr>`;
+    });
+
+    document.getElementById("total").innerText = total;
+}
+
+function changeQty(index, value) {
+    cart[index].qty += value;
+    if (cart[index].qty <= 0) {
+        cart.splice(index, 1);
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    displayCart();
+}
+
+function removeItem(index) {
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    displayCart();
+}
+
+function clearCart() {
+    localStorage.removeItem("cart");
+    cart = [];
+    displayCart();
+}
+
+// Checkout function
+function checkout() {
+    if(cart.length === 0){
+        alert("Cart is empty!");
+        return;
+    }
+    
+    localStorage.removeItem("cart");
+    cart = [];
+    displayCart();
+    document.getElementById("review-section").style.display = "block";
+}
+
+// Save review as txt
+function saveReview() {
+    let review = document.getElementById("review-box").value.trim();
+    if(review === "") {
+        alert("Please write a review before submitting.");
+        return;
+    }
+
+    const blob = new Blob([review], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "review.txt";
+    link.click();
+
+    document.getElementById("review-box").value = "";
+    document.getElementById("review-section").style.display = "none";
+    alert("Thank you for your review!");
+}
+
+displayCart();
+</script>
+
+</body>
+</html>

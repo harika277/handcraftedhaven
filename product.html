@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
+
+<style>
+/* Floating cart bar */
+#cart-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #333;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    font-family: Arial, sans-serif;
+    display: none; /* hidden initially */
+    z-index: 1000;
+}
+
+#cart-bar span {
+    font-size: 16px;
+}
+
+#cart-bar button {
+    background: #ff9800;
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#cart-bar button:hover {
+    background: #e68900;
+}
+</style>
+</head>
+<body>
+        
+<nav class="navbar">
+    <div class="logo">Handcrafted Haven</div>
+    <ul>
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="product.html">Products</a></li>
+        <li><a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a></li>
+    </ul>
+</nav>
+
+<section class="prod1">
+    <div class="container">
+        <h2 class="section-title">Our Products</h2>
+        <div class="pro-list">
+            <!-- Example Product Card -->
+            <div class="pro">
+                <img src="bb.jpg" alt="Bamboo Basket">
+                <h3>Bamboo Basket</h3>
+                <p>Eco-friendly handwoven basket.</p>
+                <span class="price">₹499</span>
+
+                <div class="cart-control">
+                    <button class="add-btn" onclick="addItemToCart('Bamboo Basket', 499)">Add</button>
+                </div>
+            </div>
+            <div class="pro">
+                <img src="ct.jpg" alt="Channapatna dolls">
+                <h3>Channapatna wooden dools</h3>
+                <p>Traditional wooden dolls.</p>
+                <span class="price">₹399</span>
+
+                <div class="cart-control">
+                    <button class="add-btn" onclick="addItemToCart('Bamboo Basket', 499)">Add</button>
+                </div>
+            </div>
+            <div class="pro">
+                <img src="jb.jpg" alt="Jute Bag">
+                <h3>Handcrafted Jute Bag</h3>
+                <p>Eco-friendly & stylish.</p>
+                <span class="price">₹350</span>
+                <div class="cart-control">
+                    <button class="add-btn" onclick="addItemToCart('Bamboo Basket', 499)">Add</button>
+                </div>
+            </div>
+            <div class="pro">
+                <img src="wh.jpg" alt="Wall Hanging">
+                <h3>Ethnic Wall Hanging</h3>
+                <p>Great for festivals.</p>
+                <span class="price">₹399</span>
+
+                <div class="cart-control">
+                    <button class="add-btn" onclick="addItemToCart('Bamboo Basket', 499)">Add</button>
+                </div>
+            </div>
+
+            <div class="pro">
+                <img src="tp.jpg" alt="Terracotta Pot">
+                <h3>Terracotta Pot</h3>
+                <p>Traditional clay pot.</p>
+                <span class="price">₹699</span>
+                <div class="cart-control">
+                    <button class="add-btn" onclick="addItemToCart('Terracotta Pot', 699)">Add</button>
+                </div>
+            </div>
+            <div class="pro">
+                <img src="oj.jpg" alt="Oxidised jewellery">
+                <h3>Oxidised Jewellery Set</h3>
+                <p>Perfect for all occasions.</p>
+                <span class="price">₹599</span>
+                  <div class="cart-control">
+                    <button class="add-btn" onclick="addItemToCart('Terracotta Pot', 699)">Add</button>
+                </div>
+            </div>
+            <div class="pro">
+                <img src="sc.jpg" alt="Sandalwood Elephant">
+                <h3>Sandalwood Elephant</h3>
+                <p>Hand-carved decorative piece.</p>
+                <span class="price">₹399</span>
+         <div class="cart-control">
+                    <button class="add-btn" onclick="addItemToCart('Terracotta Pot', 699)">Add</button>
+                </div>
+            </div>
+            <div class="pro">
+                <img src="jp.jpg" alt="Jaipur blue pottery">
+                <h3>Jaipur Blue Pottery</h3>
+                <p>Traditional Rajasthan craft.</p>
+                <span class="price">₹799</span>
+
+         <div class="cart-control">
+                    <button class="add-btn" onclick="addItemToCart('Terracotta Pot', 699)">Add</button>
+                </div>
+            </div>
+
+            <!-- Add other products similarly -->
+        </div>
+    </div>
+</section>
+
+<!-- Floating Cart Bar -->
+<div id="cart-bar">
+    <span id="cart-count">0 items in cart</span>
+    <button onclick="goToCart()">Go to Cart</button>
+</div>
+
+<script>
+// Update cart bar display
+function updateCartBar() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+    
+    if (totalItems > 0) {
+        document.getElementById('cart-count').innerText = `${totalItems} item${totalItems > 1 ? 's' : ''} in cart`;
+        document.getElementById('cart-bar').style.display = 'flex';
+    } else {
+        document.getElementById('cart-bar').style.display = 'none';
+    }
+}
+
+// Add item to cart
+function addItemToCart(name, price) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let existing = cart.find(item => item.item === name);
+
+    if (existing) {
+        existing.qty++;
+    } else {
+        cart.push({ item: name, price: price, qty: 1 });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartBar();
+}
+
+// Go to cart page
+function goToCart() {
+    window.location.href = "cart.html";
+}
+
+// Initialize cart bar on page load
+window.onload = updateCartBar;
+</script>
+
+</body>
+</html>
+
+          
+
+               
