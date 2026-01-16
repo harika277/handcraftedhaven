@@ -38,7 +38,7 @@ th {
 
 button {
     padding: 6px 12px;
-    border: none;
+    border: 2px solid black;
     cursor: pointer;
     border-radius: 4px;
 }
@@ -61,7 +61,7 @@ button {
 .total {
     width: 90%;
     margin: 20px auto;
-    text-align: right;
+    text-align:right;
     font-size: 1.2rem;
 }
 
@@ -141,25 +141,29 @@ button {
     Total Amount: ₹<span id="total">0</span>
 </div>
 
+
+
 <div class="actions">
     <button class="clear-btn" onclick="clearCart()">Clear Cart</button>
 </div>
 
-<!-- Payment Method Section -->
+
 <div class="payment-section">
     <strong>Payment Method:</strong> Cash on Delivery (COD)
 </div>
 
-<!-- Checkout Button -->
+
 <div class="checkout-action">
-    <button class="qty-btn" onclick="checkout()">Proceed to Checkout</button>
+    <button class="qty-btn" onclick="checkout()">Confirm order</button>
 </div>
 
 <!-- Review Section -->
 <div id="review-section">
     <h2>Order placed.Thank you for shoppin with us!!</h2>
-    <h3>Leave a Review</h3>
-    <textarea id="review-box" rows="5" placeholder="Write your review here..."></textarea>
+    <h3>Leave us a feedback</h3>
+    <input type="email" id="email" placeholder="Enter your email" required>
+<br><br>
+    <textarea id="review-box" rows="5" placeholder="Write your feedback here..."></textarea>
     <button onclick="saveReview()">Submit Review</button>
 </div>
 
@@ -169,6 +173,8 @@ let cart = JSON.parse(localStorage.getItem("cart")) || [];
 function displayCart() {
     let table = document.getElementById("cartItems");
     let total = 0;
+    
+   
     table.innerHTML = "";
 
     if (cart.length === 0) {
@@ -194,8 +200,11 @@ function displayCart() {
             </td>
         </tr>`;
     });
+    
+
 
     document.getElementById("total").innerText = total;
+    
 }
 
 function changeQty(index, value) {
@@ -232,24 +241,48 @@ function checkout() {
     document.getElementById("review-section").style.display = "block";
 }
 
-// Save review as txt
+
 function saveReview() {
+    let email = document.getElementById("email").value.trim();
     let review = document.getElementById("review-box").value.trim();
-    if(review === "") {
-        alert("Please write a review before submitting.");
+
+    if (!email || !review) {
+        alert("Please enter both email and review");
         return;
     }
 
-    const blob = new Blob([review], { type: "text/plain" });
+    // Get old reviews
+    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+
+    // Add new review
+    reviews.push({
+        email: email,
+        review: review
+    });
+
+    // Save back to localStorage
+    localStorage.setItem("reviews", JSON.stringify(reviews));
+
+    // Create CSV content
+    let csv = "Email,Review\n";
+    reviews.forEach(r => {
+        csv += `"${r.email}","${r.review}"\n`;
+    });
+
+    // Auto download
+    const blob = new Blob([csv], { type: "text/csv" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "review.txt";
+    link.download = "reviews.csv";
     link.click();
 
+    // Clear inputs
+    document.getElementById("email").value = "";
     document.getElementById("review-box").value = "";
-    document.getElementById("review-section").style.display = "none";
-    alert("Thank you for your review!");
+
+    alert("Thank you for your feedback!");
 }
+
 
 displayCart();
 </script>

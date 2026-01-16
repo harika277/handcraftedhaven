@@ -10,7 +10,39 @@
 <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
 
 <style>
-/* Floating cart bar */
+    .cart-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cart-control button {
+    border: none;
+    padding: 6px 12px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 6px;
+    background-color: #222;
+    color: #fff;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.cart-control button:hover {
+    background-color: #444;
+}
+
+.cart-control button:active {
+    transform: scale(0.95);
+}
+
+.cart-control span {
+    min-width: 24px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+
 #cart-bar {
     position: fixed;
     bottom: 0;
@@ -62,14 +94,14 @@
     <div class="container">
         <h2 class="section-title">Our Products</h2>
         <div class="pro-list">
-            <!-- Example Product Card -->
+       
             <div class="pro">
                 <img src="bb.jpg" alt="Bamboo Basket">
                 <h3>Bamboo Basket</h3>
                 <p>Eco-friendly handwoven basket.</p>
                 <span class="price">₹499</span>
 
-                <div class="cart-control">
+                <div class="cart-control" id="btn-BambooBasket">
                     <button class="add-btn" onclick="addItemToCart('Bamboo Basket', 499)">Add</button>
                 </div>
             </div>
@@ -79,8 +111,8 @@
                 <p>Traditional wooden dolls.</p>
                 <span class="price">₹399</span>
 
-                <div class="cart-control">
-                    <button class="add-btn" onclick="addItemToCart('Bamboo Basket', 499)">Add</button>
+                <div class="cart-control" id="btn-Channapatnadolls">
+                    <button class="add-btn" onclick="addItemToCart('Channapatna dolls', 399)">Add</button>
                 </div>
             </div>
             <div class="pro">
@@ -88,8 +120,8 @@
                 <h3>Handcrafted Jute Bag</h3>
                 <p>Eco-friendly & stylish.</p>
                 <span class="price">₹350</span>
-                <div class="cart-control">
-                    <button class="add-btn" onclick="addItemToCart('Bamboo Basket', 499)">Add</button>
+                <div class="cart-control" id="btn-Jutebag">
+                    <button class="add-btn" onclick="addItemToCart('Jute bag', 350)">Add</button>
                 </div>
             </div>
             <div class="pro">
@@ -98,8 +130,8 @@
                 <p>Great for festivals.</p>
                 <span class="price">₹399</span>
 
-                <div class="cart-control">
-                    <button class="add-btn" onclick="addItemToCart('Bamboo Basket', 499)">Add</button>
+                <div class="cart-control" id="btn-Wallhanging">
+                    <button class="add-btn" onclick="addItemToCart('Wall hanging', 399)">Add</button>
                 </div>
             </div>
 
@@ -108,7 +140,7 @@
                 <h3>Terracotta Pot</h3>
                 <p>Traditional clay pot.</p>
                 <span class="price">₹699</span>
-                <div class="cart-control">
+                <div class="cart-control" id="btn-TerracottaPot">
                     <button class="add-btn" onclick="addItemToCart('Terracotta Pot', 699)">Add</button>
                 </div>
             </div>
@@ -117,8 +149,8 @@
                 <h3>Oxidised Jewellery Set</h3>
                 <p>Perfect for all occasions.</p>
                 <span class="price">₹599</span>
-                  <div class="cart-control">
-                    <button class="add-btn" onclick="addItemToCart('Terracotta Pot', 699)">Add</button>
+                  <div class="cart-control" id="btn-OxidisedJewelry">
+                    <button class="add-btn" onclick="addItemToCart('Oxidised Jewelry', 599)">Add</button>
                 </div>
             </div>
             <div class="pro">
@@ -126,34 +158,33 @@
                 <h3>Sandalwood Elephant</h3>
                 <p>Hand-carved decorative piece.</p>
                 <span class="price">₹399</span>
-         <div class="cart-control">
-                    <button class="add-btn" onclick="addItemToCart('Terracotta Pot', 699)">Add</button>
+         <div class="cart-control" id="btn-SandalwoodElephantcarving">
+                    <button class="add-btn" onclick="addItemToCart('Sandalwood Elephant carving', 399)">Add</button>
                 </div>
             </div>
+            
             <div class="pro">
                 <img src="jp.jpg" alt="Jaipur blue pottery">
                 <h3>Jaipur Blue Pottery</h3>
                 <p>Traditional Rajasthan craft.</p>
                 <span class="price">₹799</span>
 
-         <div class="cart-control">
-                    <button class="add-btn" onclick="addItemToCart('Terracotta Pot', 699)">Add</button>
+         <div class="cart-control" id="btn-Jaipurbluepottery">
+                    <button class="add-btn" onclick="addItemToCart('Jaipur blue pottery',699)">Add</button>
                 </div>
             </div>
-
-            <!-- Add other products similarly -->
         </div>
     </div>
 </section>
 
-<!-- Floating Cart Bar -->
+
 <div id="cart-bar">
     <span id="cart-count">0 items in cart</span>
     <button onclick="goToCart()">Go to Cart</button>
 </div>
 
 <script>
-// Update cart bar display
+
 function updateCartBar() {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
@@ -165,28 +196,76 @@ function updateCartBar() {
         document.getElementById('cart-bar').style.display = 'none';
     }
 }
+function getSafeName(name) {
+    return name.replace(/\s+/g, '');
+}
 
-// Add item to cart
 function addItemToCart(name, price) {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let safeName = getSafeName(name);
     let existing = cart.find(item => item.item === name);
 
     if (existing) {
         existing.qty++;
+        document.getElementById(`qty-${safeName}`).innerText = existing.qty;
     } else {
         cart.push({ item: name, price: price, qty: 1 });
+        changeToQtyButtons(name, price);
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
     updateCartBar();
 }
 
-// Go to cart page
+function changeToQtyButtons(name, price) {
+    let safeName = getSafeName(name);
+    let btnDiv = document.getElementById("btn-" + safeName);
+
+    if (!btnDiv) return;
+
+    btnDiv.innerHTML = `
+        <button onclick="decreaseQty('${name}')">-</button>
+        <span id="qty-${safeName}">1</span>
+        <button onclick="addItemToCart('${name}', ${price})">+</button>
+    `;
+}
+
+function decreaseQty(name) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let safeName = getSafeName(name);
+    let index = cart.findIndex(item => item.item === name);
+
+    cart[index].qty--;
+
+    if (cart[index].qty === 0) {
+        cart.splice(index, 1);
+        resetToAddButton(name);
+    } else {
+        document.getElementById(`qty-${safeName}`).innerText = cart[index].qty;
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartBar();
+}
+
+function resetToAddButton(name) {
+    let safeName = getSafeName(name);
+    let btnDiv = document.getElementById("btn-" + safeName);
+
+    btnDiv.innerHTML = `
+        <button class="add-btn"
+            onclick="addItemToCart('${name}', 399)">
+            Add
+        </button>
+    `;
+}
+
+
 function goToCart() {
     window.location.href = "cart.html";
 }
 
-// Initialize cart bar on page load
+
 window.onload = updateCartBar;
 </script>
 

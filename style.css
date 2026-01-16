@@ -40,12 +40,12 @@ body {
     font-size: 1rem;
 }
 
-.navbar ul li a:hover
+.navbar ul li a:hover,.navclass ul li a:active
  {
     border-bottom: 2px solid #fff;
 }
 
-/* HERO SECTION */
+
 #hero {
     margin-top:10px;
     margin-bottom:10px;
@@ -55,16 +55,15 @@ body {
     justify-content: center;
     text-align: center;
     
-    /* Remove the orange background-color */
-    /* background-color: #f4a261; */
+    
     
     background-image: url('fimg.jpg');  /* Replace with actual filename/path, e.g., 'images/vase.jpg' */
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: contain;          /* IMPORTANT: Shows FULL image, no cropping at all */
-    background-color: #000;            /* Optional: black backdrop for any empty space (letterboxing) */
+    background-size: contain;          
+    background-color: #000;            
     
-    position: relative;                /* For overlay */
+    position: relative;               
 }
 
 /* Dark overlay to keep text readable on the bright image */
@@ -123,12 +122,14 @@ body {
     color: white;
     text-align: center;
     padding: 20px;
+
 }
 
 .foot ul {
     list-style: none;
     display: flex;
     justify-content: center;
+    flex-direction: column;
     gap: 20px;
     margin-top: 10px;
 }
@@ -218,6 +219,7 @@ body {
     border-radius: 6px;
     font-size: 16px;
     cursor: pointer;
+    margin-bottom: 20px;
 }
 
 .qty-box {
@@ -242,5 +244,5 @@ body {
     font-weight: bold;
 }
 .prod1 {
-    padding-bottom: 70px; /* ensures last row is visible above the cart bar */
+    padding-bottom: 70px;  
 }
