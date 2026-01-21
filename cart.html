@@ -271,16 +271,15 @@ messages.push("Invalid email");
     }
     error.innerText="";
 
-    // Get old reviews
+    
     let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
 
-    // Add new review
+    
     reviews.push({
         email: email,
         review: review
     });
 
-    // Save back to localStorage
     localStorage.setItem("reviews", JSON.stringify(reviews));
 
     // Create CSV content
@@ -289,7 +288,7 @@ messages.push("Invalid email");
         csv += `"${r.email}","${r.review}"\n`;
     });
 
-    // Auto download
+    
     const blob = new Blob([csv], { type: "text/csv" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
