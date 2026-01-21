@@ -161,7 +161,9 @@ button {
 <div id="review-section">
     <h2>Order placed.Thank you for shoppin with us!!</h2>
     <h3>Leave us a feedback</h3>
-    <input type="email" id="email" placeholder="Enter your email" required>
+    <input type="email" id="email" placeholder="Enter your email" required><br>
+    <input type="text" id="number" placeholder="Enter your number" ><br>
+    <p id="error" style="color:red;"></p>
 <br><br>
     <textarea id="review-box" rows="5" placeholder="Write your feedback here..."></textarea>
     <button onclick="saveReview()">Submit Review</button>
@@ -244,12 +246,26 @@ function checkout() {
 
 function saveReview() {
     let email = document.getElementById("email").value.trim();
+    let number=document.getElementById("number").value.trim();
     let review = document.getElementById("review-box").value.trim();
-
-    if (!email || !review) {
-        alert("Please enter both email and review");
+    let error=document.getElementById("error");
+    let pattern=/^[0-9]{10}$/;
+let messages=[];
+    if(email.indexOf('@')===-1 || email.indexOf('.')===-1 || email===''){
+messages.push("Invalid email");
+    }
+    if(!pattern.test(number)){
+        messages.push("Invalid number");
+    }
+    
+    if ( !review) {
+        messages.push("Please enter  review");
         return;
     }
+    if(messages.length>0){
+        error.innerText=messages.join("<br>");
+    }
+    error.innerText="";
 
     // Get old reviews
     let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
