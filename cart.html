@@ -163,7 +163,7 @@ button {
     <h3>Leave us a feedback</h3>
     <input type="email" id="email" placeholder="Enter your email" required><br>
     <input type="text" id="number" placeholder="Enter your number" ><br>
-    <p id="error" style="color:red;"></p>
+    <span id="error" style="color:red;"></span>
    
 <br><br>
     <textarea id="review-box" rows="5" placeholder="Write your feedback here..."></textarea>
@@ -249,22 +249,25 @@ function saveReview() {
     let email = document.getElementById("email").value.trim();
     let number=document.getElementById("number").value.trim();
     let review = document.getElementById("review-box").value.trim();
-    let error1=document.getElementById("error1");
+    let error=document.getElementById("error");
     let pattern=/^[0-9]{10}$/;
 let messages=[];
     if(email.indexOf('@')===-1 || email.indexOf('.')===-1 || email===''){
 messages.push("Invalid email");
+       
     }
     if(!pattern.test(number)){
         messages.push("Invalid number");
+        
     }
     
     if ( !review) {
         messages.push("Please enter  review");
-        return;
+       
     }
     if(messages.length>0){
-        doucument.getElementById("error").innerText=messages.join("<br>");
+       error.innerHTML=messages.join("<br>");
+        return;
     }
     error.innerText="";
 
@@ -296,6 +299,7 @@ messages.push("Invalid email");
     // Clear inputs
     document.getElementById("email").value = "";
     document.getElementById("review-box").value = "";
+    document.getElementById("number").value = "";
 
     alert("Thank you for your feedback!");
 }
